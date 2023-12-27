@@ -18,7 +18,15 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-Route::prefix('user')->name('user.*')->group(function (){
+
+Route::prefix(config('basic.adminPrefix'))->name('admin.')->group(function () {
+    Route::controller(App\Http\Controllers\Admin\Auth\LoginController::class)->group(function () {
+		Route::get('login', 'showLoginForm')->name('login.show');
+		Route::post('login', 'login')->name('login.post');
+		Route::post('logout', 'logout')->name('logout')->middleware('auth:web');
+	});
+
+
     Route::middleware(['guest'])->group(function (){
         Route::view('/login','dashboard.user.login')->name('login');
         Route::view('/register','dashboard.user.register')->name('register');
