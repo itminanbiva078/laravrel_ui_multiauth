@@ -17,10 +17,12 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/dashboard';
-    
-   
-    public const CONSUMER = '/consumer';
+    public const HOME = '/dashboard/';
+
+
+    public const CONSUMER = '/consumer/';
+
+
     /**
      * The controller namespace for the application.
      *
@@ -49,12 +51,13 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
 
-            Route::middleware('web')
-				->prefix(config('basic.consumerPrefix'))
-				->name('consumer.')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/consumer.php'));
-                
+
+//            Route::middleware('web')
+//				->prefix(config('basic.consumerPrefix'))
+//				->name('consumer.')
+//                ->namespace($this->namespace)
+//                ->group(base_path('routes/consumer.php'));
+
         });
     }
 
