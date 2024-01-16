@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Merchant\Auth;
+namespace App\Http\Controllers\Consumer\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Merchant;
-use App\Models\Merchant\MerchantBankDetail;
+use App\Models\Consumer;
 use App\Models\Merchant\MerchantDocument;
-use App\Models\Merchant\MerchantProfile;
+use App\Models\Consumer\MerchantProfile;
 use App\Models\Password;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -44,7 +43,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::MERCHANT;
+    protected $redirectTo = RouteServiceProvider::CONSUMER;
 
     /**
      * Create a new controller instance.
@@ -58,13 +57,13 @@ class RegisterController extends Controller
 
     public function showRegisterForm()
 	{
-          $value = Cache::rememberForever('webSignup', function () {
-			$settings = Setting::where('id', config('setting.index.merchant'))->first();
-			$settings = json_decode($settings->details, true);
-			return $settings['webSignup'];
-		});
-
-		abort_if(!$value, 417, 'Sorry, registration is not available right now. Please try again later.');
+//          $value = Cache::rememberForever('webSignup', function () {
+//			$settings = Setting::where('id', config('setting.index.merchant'))->first();
+//			$settings = json_decode($settings->details, true);
+//			return $settings['webSignup'];
+//		});
+//
+//		abort_if(!$value, 417, 'Sorry, registration is not available right now. Please try again later.');
 
 		return view('merchant.auth.register');
 	}

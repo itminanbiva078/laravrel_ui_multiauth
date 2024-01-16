@@ -16,6 +16,8 @@ class Authenticate extends Middleware
     {
         if(trim(request()->route()->getPrefix(),'/') == config('basic.adminPrefix')){
             return route('admin.login.show');
+        }elseif(trim(request()->route()->getPrefix(),'/') == config('basic.consumerPrefix')){
+            return route('consumer.login.show');
         }else{
             if (!$request->expectsJson()) {
                 if(!Auth::user()){
