@@ -27,6 +27,15 @@ Route::get('/', function () {
 
         Route::middleware(['auth:web'])->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('home');
+
+            //Users route
+            Route::get('user', [App\Http\Controllers\Admin\UserController::class, 'index'])->name('user');
+
+            //Settings route
+            Route::get('settings', [App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings');
+
+
+
         });
 });
 

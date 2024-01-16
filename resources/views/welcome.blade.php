@@ -35,6 +35,11 @@
 <body>
 <div class="splash">
     <h1>Welcome to Paynow</h1>
+
+{{--    <a data-aos="zoom-in-up" data-aos-delay="50"--}}
+{{--       data-aos-duration="1000" href="{{ route('consumer.login.show') }}">Consumer</a>--}}
 </div>
+
+
 </body>
 </html>

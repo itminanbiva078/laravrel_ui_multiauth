@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(App\Http\Controllers\Consumer\Auth\LoginController::class)->group(function () {
     Route::get('login', 'showLoginForm')->name('login.show');
     Route::post('login', 'login')->name('login.post');
-    Route::post('logout', 'logout')->name('logout')->middleware('auth:merchant');
+    Route::post('logout', 'logout')->name('logout')->middleware('auth:consumer');
 });
 
 //Route::get('register', [App\Http\Controllers\Merchant\Auth\RegisterController::class, 'showRegisterForm'])->name('register');
@@ -24,9 +24,9 @@ Route::controller(App\Http\Controllers\Consumer\Auth\LoginController::class)->gr
 //Route::post('reset-password', [App\Http\Controllers\Merchant\Auth\ForgotPasswordManager::class, 'resetPasswordPost'])->name('reset.password.post');
 
 
-Route::get('change-password', 'App\Http\Livewire\Merchant\ChangePasswords')->name('change.password')->middleware('auth:merchant');
-
-Route::middleware(['auth:merchant', 'password.expire', 'checkIsActive'])->group(function () {
-    Route::get('/', [App\Http\Controllers\Merchant\HomeController::class, 'index'])->name('home');
-
-});
+//Route::get('change-password', 'App\Http\Livewire\Merchant\ChangePasswords')->name('change.password')->middleware('auth:merchant');
+//
+//Route::middleware(['auth:merchant', 'password.expire', 'checkIsActive'])->group(function () {
+//    Route::get('/', [App\Http\Controllers\Merchant\HomeController::class, 'index'])->name('home');
+//
+//});

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Consumer\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Setting;
-use App\Models\Merchant;
+use App\Models\Consumer;
 use App\Providers\RouteServiceProvider;
 use App\Traits\LoginAttemptTrait;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -50,20 +50,20 @@ class LoginController extends Controller
 	 */
 	public function __construct()
 	{
-		$this->middleware('guest:merchant')->except('logout');
+		$this->middleware('guest:consumer')->except('logout');
 		$this->maxAttempts = config('basic.maxAttempts');
 		$this->decayMinutes = config('basic.decayMinutes');
 	}
 
 	public function showLoginForm()
 	{
-		$value = Cache::rememberForever('webLogin', function () {
-			$settings = Setting::where('id', config('setting.index.merchant'))->first();
-			$settings = json_decode($settings->details, true);
-			return $settings['webLogin'];
-		});
-		abort_if(!$value, 417, 'Sorry, login is not available right now. Please try again later.');
-		return view('merchant.auth.login');
+//		$value = Cache::rememberForever('webLogin', function () {
+//			$settings = Setting::where('id', config('setting.index.merchant'))->first();
+//			$settings = json_decode($settings->details, true);
+//			return $settings['webLogin'];
+//		});
+//		abort_if(!$value, 417, 'Sorry, login is not available right now. Please try again later.');
+		return view('consumer.auth.login');
 	}
 
 	function validateLogin(Request $request)
@@ -86,33 +86,33 @@ class LoginController extends Controller
 		return $dtF->diff($dtT)->format('%i minutes and %s seconds');
 	}
 
-	protected function authenticated(Request $request, Merchant\MerchantUser $user)
+	protected function authenticated(Request $request, Consumer\ConsumerUser $user)
 	{
-		Auth::guard('merchant')->logoutOtherDevices($request->password);
+		Auth::guard('consumer')->logoutOtherDevices($request->password);
 	}
 
 	public function login(Request $request)
 	{
 		$this->validateLogin($request);
 
-		$checkCustomLoginAttempt = $this->checkCustomLoginAttempt($request->{$this->username()}, config('setting.user.type.merchant'));
+		$checkCustomLoginAttempt = $this->checkCustomLoginAttempt($request->{$this->username()}, config('setting.user.type.consumer'));
 		if ($checkCustomLoginAttempt >= config('basic.maxAttempts')) {
-			$seconds = $this->customFireLockoutEvent($request->{$this->username()}, config('setting.user.type.merchant'));
+			$seconds = $this->customFireLockoutEvent($request->{$this->username()}, config('setting.user.type.consumer'));
 			$message = [Lang::get('auth.throttle', ['seconds' => $this->secondsToTime($seconds)])];
 			return back()->withInput()->withErrors(['password' => $message]);
 		}
 		if ($this->attemptLogin($request)) {
-			$user = Auth::guard('merchant')->user();
+			$user = Auth::guard('consumer')->user();
 
 			if ($user->is_active == config('setting.status.inactive')) {
-				$this->incrementCustomLoginAttempt($request->{$this->username()}, config('setting.user.type.merchant'));
+				$this->incrementCustomLoginAttempt($request->{$this->username()}, config('setting.user.type.consumer'));
 				$this->authAccessLog($request, 403); //403 = INACTIVE
-				Auth::guard('merchant')->logout();
+				Auth::guard('consumer')->logout();
 				return back()->withInput()->withErrors([$this->username() => 'Account is deactivated']);
 			}
 
 			$this->authAccessLog($request, 200);
-			$this->clearLoginAttempt($request->{$this->username()}, config('setting.user.type.merchant'));
+			$this->clearLoginAttempt($request->{$this->username()}, config('setting.user.type.consumer'));
 
 			return $this->sendLoginResponse($request);
 		}
@@ -120,7 +120,7 @@ class LoginController extends Controller
 		// If the login attempt was unsuccessful we will increment the number of attempts
 		// to login and redirect the user back to the login form. Of course, when this
 		// user surpasses their maximum number of attempts they will get locked out.
-		$this->incrementCustomLoginAttempt($request->{$this->username()}, config('setting.user.type.merchant'));
+		$this->incrementCustomLoginAttempt($request->{$this->username()}, config('setting.user.type.consumer'));
 
 		$this->authAccessLog($request, 401);
 		return $this->sendFailedLoginResponse($request);
@@ -147,7 +147,7 @@ class LoginController extends Controller
 
 	protected function guard()
 	{
-		return Auth::guard('merchant');
+		return Auth::guard('consumer');
 	}
 
 	public function logout(Request $request)
@@ -164,6 +164,6 @@ class LoginController extends Controller
 
 		return $request->wantsJson()
 			? new JsonResponse([], 204)
-			: redirect('/merchant/login');
+			: redirect('/consumer/login');
 	}
 }
